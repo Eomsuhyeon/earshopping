@@ -1,0 +1,181 @@
+/**
+ * EarShopping 공통 디자인 시스템 (사운드 테마: 블루·틸 그라데이션)
+ * ------------------------------------------------------------
+ * 참고 디자인(SENSI: 다크 배경 + 퍼플→핑크 그라데이션 + 글래스모피즘 카드)을
+ * 기존 기능은 전혀 건드리지 않고 시각적으로만 입힌 공통 스타일시트.
+ * 세 페이지(index/online/offline) 모두 이 파일을 불러와 공유한다.
+ */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap');
+
+:root{
+  --bg: #070b14;
+  --bg-elevated: #0f1826;
+  --surface: rgba(255,255,255,0.045);
+  --surface-2: rgba(255,255,255,0.08);
+  --border: rgba(255,255,255,0.09);
+  --border-strong: rgba(255,255,255,0.16);
+
+  --text: #ffffff;
+  --text-muted: #a1a1aa;
+  --text-dim: #71717a;
+
+  --purple-300: #7dd3fc;
+  --purple-400: #38bdf8;
+  --purple-500: #0ea5e9;
+  --purple-600: #0369a1;
+  --pink-400: #5eead4;
+  --pink-500: #2dd4bf;
+  --pink-600: #0d9488;
+
+  --gradient: linear-gradient(135deg, var(--purple-600), var(--pink-600));
+  --gradient-soft: linear-gradient(135deg, rgba(3,105,161,0.22), rgba(13,148,136,0.22));
+  --gradient-text: linear-gradient(90deg, var(--purple-400), var(--pink-400));
+
+  --danger: #f87171;
+  --success: #4ade80;
+
+  --radius-lg: 24px;
+  --radius-md: 16px;
+  --radius-sm: 10px;
+
+  --font-display: 'Outfit', 'Noto Sans KR', sans-serif;
+  --font-body: 'Noto Sans KR', sans-serif;
+
+  --shadow-glow: 0 4px 20px rgba(14,165,233,0.4);
+}
+
+*{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+body{
+  background:
+    radial-gradient(circle at 15% -10%, rgba(3,105,161,0.26) 0%, transparent 45%),
+    radial-gradient(circle at 100% 0%, rgba(13,148,136,0.2) 0%, transparent 40%),
+    var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  line-height: 1.6;
+}
+
+h1,h2,h3,h4{ font-family: var(--font-display); font-weight: 800; margin: 0; letter-spacing: -0.01em; }
+
+a{ color: var(--purple-300); }
+
+/* ---------- 브랜드 타이틀 (그라데이션 텍스트) ---------- */
+.brand-title{
+  font-family: var(--font-display); font-weight: 900;
+  background: var(--gradient-text);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.brand-badge{
+  font-size: 10.5px; font-weight: 800; color: var(--purple-300);
+  background: rgba(14,165,233,0.16); border: 1px solid rgba(14,165,233,0.35);
+  padding: 3px 9px; border-radius: 999px; margin-left: 8px; vertical-align: middle;
+}
+
+/* ---------- 버튼 ---------- */
+button{ font-family: var(--font-body); cursor: pointer; }
+
+.btn-primary, button.btn-primary{
+  background: var(--gradient); color: #fff; border: none;
+  border-radius: var(--radius-md); font-weight: 800; padding: 12px 20px;
+  box-shadow: var(--shadow-glow); transition: transform .15s ease, filter .15s ease;
+  font-family: var(--font-display);
+}
+.btn-primary:hover{ filter: brightness(1.08); }
+.btn-primary:active{ transform: scale(0.97); }
+
+.btn-secondary, button.secondary{
+  background: var(--surface); color: var(--text); border: 1px solid var(--border);
+  border-radius: var(--radius-md); font-weight: 700; padding: 12px 18px;
+  transition: border-color .15s ease, background .15s ease;
+}
+.btn-secondary:hover, button.secondary:hover{ border-color: var(--border-strong); background: var(--surface-2); }
+.btn-secondary:active, button.secondary:active{ transform: scale(0.97); }
+
+/* ---------- 마이크 버튼 (핵심 상호작용 요소) ---------- */
+#micBtn, .mic-btn{
+  background: var(--gradient); color: #fff; border: none;
+  border-radius: var(--radius-md); font-weight: 800; padding: 12px 20px;
+  box-shadow: var(--shadow-glow);
+  animation: pulse-glow 2.4s ease-in-out infinite;
+  transition: transform .15s ease, background .2s ease;
+}
+#micBtn:active, .mic-btn:active{ transform: scale(0.96); }
+#micBtn.listening, .mic-btn.listening{
+  background: linear-gradient(135deg, #14b8a6, #06b6d4);
+  box-shadow: 0 4px 20px rgba(20,184,166,0.4);
+}
+#micBtn.speaking, .mic-btn.speaking{
+  background: linear-gradient(135deg, var(--purple-500), var(--purple-600));
+}
+
+@keyframes pulse-glow{
+  0%, 100% { box-shadow: 0 0 10px rgba(56,189,248,0.4); }
+  50% { box-shadow: 0 0 26px rgba(56,189,248,0.7); }
+}
+@media (prefers-reduced-motion: reduce){
+  #micBtn, .mic-btn{ animation: none; }
+}
+
+/* ---------- 입력창 ---------- */
+input[type=text], input[type=number], input[type=password], select, textarea{
+  background: var(--surface); border: 1px solid var(--border); color: var(--text);
+  border-radius: var(--radius-sm); padding: 10px 14px; font-family: var(--font-body);
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+input:focus, select:focus, textarea:focus{
+  outline: none; border-color: rgba(56,189,248,0.65); box-shadow: 0 0 0 3px rgba(56,189,248,0.2);
+}
+input::placeholder{ color: var(--text-dim); }
+label{ color: var(--text-muted); }
+
+/* ---------- 카드(글래스모피즘) ---------- */
+.card{
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  backdrop-filter: blur(8px); transition: border-color .2s ease, box-shadow .2s ease;
+}
+.card:hover{ border-color: rgba(56,189,248,0.4); }
+.card.active, .card.armed{
+  border-color: rgba(56,189,248,0.6);
+  box-shadow: 0 0 24px rgba(56,189,248,0.2);
+}
+
+/* ---------- 배지/필 ---------- */
+.badge, .pill{
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 10.5px; font-weight: 800; padding: 3px 10px; border-radius: 999px;
+  background: var(--gradient); color: #fff;
+}
+.badge-outline{
+  background: var(--surface); border: 1px solid var(--border); color: var(--text-muted);
+  font-weight: 700; font-size: 11px; padding: 3px 10px; border-radius: 999px;
+}
+@keyframes badge-pop{
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.badge-pop{ animation: badge-pop .3s cubic-bezier(.175,.885,.32,1.275) forwards; }
+
+/* ---------- 상태 텍스트 ---------- */
+.status-text{ color: var(--purple-300); font-weight: 700; font-size: 13.5px; }
+.status-sub{ color: var(--text-dim); font-size: 12px; }
+.muted{ color: var(--text-muted); }
+.hint{ color: var(--text-dim); font-size: 13px; }
+
+/* ---------- 안내/알림 배너 ---------- */
+.notice-panel{
+  background: var(--gradient-soft); border: 1px solid rgba(14,165,233,0.3);
+  border-radius: var(--radius-md); padding: 14px 16px;
+}
+.warn-banner{
+  background: rgba(248,113,113,0.12); border: 1px solid rgba(248,113,113,0.4);
+  color: #fecaca; border-radius: var(--radius-sm); padding: 10px 14px; font-size: 13px;
+}
+
+/* ---------- 스크롤바 숨김 ---------- */
+.scrollbar-hide::-webkit-scrollbar{ display: none; }
+.scrollbar-hide{ -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ---------- 포커스 접근성 ---------- */
+:focus-visible{ outline: 2px solid var(--purple-400); outline-offset: 2px; }

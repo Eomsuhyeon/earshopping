@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="/manifest.json">
+<link rel="stylesheet" href="/theme.css">
+<meta name="theme-color" content="#0ea5e9">
+<title>EarShopping — 오프라인 매장 안내</title>
+<style>
+  body{ max-width: 860px; margin: 22px auto; padding: 0 18px 60px; }
+  h1{ font-size:19px; }
+  .row{ display:flex; gap:10px; margin:12px 0; flex-wrap:wrap; align-items:center; }
+  .topbar{ display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px; gap:10px; }
+  .topbar a{ font-size:12.5px; color: var(--purple-300); text-decoration:none; white-space:nowrap; }
+  .topbar a:hover{ text-decoration:underline; }
+  .topbar-right{ display:flex; align-items:center; gap:10px; flex-shrink:0; }
+  input[type=text]{ flex:1; min-width:200px; }
+
+  #statusBar{ margin:10px 0 3px; min-height:18px; }
+  #statusSub{ margin-bottom:10px; min-height:14px; }
+  #transcript{ font-size:13px; color: var(--text-dim); min-height:18px; }
+
+  .screen{ display:none; }
+  .screen.active{ display:block; animation: fade-in .25s ease; }
+  @keyframes fade-in{ from{ opacity:0; transform: translateY(4px); } to{ opacity:1; transform:none; } }
+
+  .card{ padding:14px 16px; margin:10px 0; cursor:pointer; }
+  .card .name{ font-weight:800; font-size:15px; font-family: var(--font-display); }
+  .card .meta{ font-size:12.5px; color: var(--text-muted); margin-top:5px; }
+
+  .menu-btn{
+    display:block; width:100%; text-align:left; margin:8px 0; padding:14px 16px; font-size:14.5px;
+    background: var(--surface); color: var(--text); border:1px solid var(--border); border-radius: var(--radius-md);
+    font-family: var(--font-display); font-weight:700; transition: border-color .15s ease, background .15s ease;
+  }
+  .menu-btn:hover{ border-color: rgba(168,85,247,0.4); background: var(--surface-2); }
+  .menu-btn:active{ transform: scale(0.98); }
+
+  .step{ border-left:3px solid var(--purple-500); padding-left:14px; margin:14px 0; }
+  .step .title{ font-weight:800; font-size:13.5px; color: var(--purple-300); font-family: var(--font-display); }
+
+  video{ width:100%; max-width:480px; border-radius: var(--radius-lg); background:#000; border: 1px solid var(--border); }
+  canvas{ display:none; }
+  #overlayCanvas{ display:block; }
+
+  .settings-panel{
+    position:fixed; right:0; top:0; height:100%; width:290px; background: var(--bg-elevated);
+    border-left:1px solid var(--border); padding:18px; transform:translateX(100%);
+    transition:transform .25s ease; overflow:auto; z-index: 30;
+    box-shadow: -10px 0 40px rgba(0,0,0,0.4);
+  }
+  .settings-panel.open{ transform:translateX(0); }
+  .settings-panel label{ display:block; font-size:13px; margin:14px 0 5px; }
+  .settings-toggle{
+    background: var(--surface); color: var(--text); border:1px solid var(--border);
+    border-radius: 999px; padding:9px 16px; font-size:12.5px; font-weight:700;
+  }
+
+  .warn-banner{ margin:10px 0; display:none; }
+  .warn-banner.show{ display:block; }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <h1 class="brand-title">👂 EarShopping <span class="muted" style="font-weight:400; font-size:14px;">오프라인</span></h1>
+    <div class="topbar-right">
+      <a href="/index.html">← 처음 화면</a>
+      <button class="settings-toggle" id="settingsToggle">⚙ 설정</button>
+    </div>
+  </div>
+  <div class="settings-panel" id="settingsPanel">
+    <h3 style="font-size:15px;">설정</h3>
+    <label><input type="checkbox" id="setVoiceOn" checked> 음성 안내 켜짐</label>
+    <label><input type="checkbox" id="setVibrationOn" checked> 진동 알림 켜짐</label>
+    <label>말하는 속도
+      <input type="range" id="setRate" min="0.6" max="1.6" step="0.1" value="1" style="width:100%;">
+    </label>
+    <label>글자 크기
+      <input type="range" id="setFontSize" min="14" max="22" step="1" value="16" style="width:100%;">
+    </label>
+    <label>음성 종류
+      <select id="setVoiceType" style="width:100%;">
+        <option value="default">기본</option>
+      </select>
+    </label>
+    <button class="btn-secondary secondary" id="settingsClose" style="margin-top:16px;width:100%;">닫기</button>
+  </div>
+
+  <div class="row">
+    <button id="micBtn">🎤 말하기 (Space 키도 가능)</button>
+    <input type="text" id="textInput" placeholder="또는 텍스트로 입력">
+    <button id="runBtn" class="secondary">입력 실행</button>
+    <button id="repeatBtn" class="secondary">🔁 다시 듣기 (R)</button>
+  </div>
+
+  <p id="statusBar" class="status-text" role="status" aria-live="polite">준비 중...</p>
+  <p id="statusSub" class="status-sub"></p>
+  <p id="transcript"></p>
+  <p id="spokenText" class="status-sub" style="font-weight:600;"></p>
+  <div class="warn-banner" id="warnBanner"></div>
+
+  <!-- 1-1 매장 선택 -->
+  <section class="screen active" id="screen-home">
+    <h2 style="font-size:16px;">매장을 선택해주세요</h2>
+    <div id="storeList"><p class="hint">위치 확인 및 매장 목록을 불러오는 중...</p></div>
+  </section>
+
+  <!-- 1-2 매장 메인 메뉴 -->
+  <section class="screen" id="screen-store">
+    <h2 style="font-size:16px;" id="storeTitle">매장 메뉴</h2>
+    <p id="storeInfo" class="hint"></p>
+    <button class="menu-btn" data-menu="start_companion">🧭 동행 시작해줘</button>
+    <button class="menu-btn" data-menu="floor_guide">🏢 층별 안내</button>
+    <button class="menu-btn" data-menu="find_store">🔍 매장 찾기</button>
+    <button class="menu-btn" data-menu="call_staff">🙋 직원 불러줘</button>
+    <p class="hint" style="margin-top:12px;">메뉴 키워드가 아니어도 브랜드명을 바로 말하면 즉시 검색됩니다.</p>
+  </section>
+
+  <!-- 1-3 매장 빠르게 찾기 -->
+  <section class="screen" id="screen-find">
+    <h2 style="font-size:16px;">매장 찾기</h2>
+    <p class="hint">찾으시는 브랜드명을 말씀해주세요.</p>
+    <div id="findResults"></div>
+    <div id="recentSearches" class="hint" style="margin-top:14px;"></div>
+  </section>
+
+  <!-- 1-4 검색결과/경로안내 -->
+  <section class="screen" id="screen-result">
+    <h2 style="font-size:16px;" id="resultTitle">경로 안내</h2>
+    <div id="resultSteps"></div>
+    <button class="secondary" id="resultBackBtn">뒤로가기</button>
+  </section>
+
+  <!-- 1-5 층별 전체 안내 -->
+  <section class="screen" id="screen-floors">
+    <h2 style="font-size:16px;">층별 안내</h2>
+    <div id="floorCards"></div>
+    <div class="row">
+      <button id="floorNextBtn">다음</button>
+      <button class="secondary" id="floorBackBtn">뒤로가기</button>
+    </div>
+  </section>
+
+  <!-- 1-6 백화점 쇼핑 동행 (카메라 AI 모드) -->
+  <section class="screen" id="screen-browse">
+    <h2 style="font-size:16px;">동행 모드 (AI 카메라)</h2>
+    <div style="position:relative; max-width:480px;">
+      <video id="cameraVideo" autoplay playsinline muted></video>
+      <canvas id="overlayCanvas" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;"></canvas>
+    </div>
+    <canvas id="captureCanvas"></canvas>
+    <p class="hint" style="margin-top:10px;">
+      "그냥 둘러볼래요" / 목적지 말하기 / "지금 보이는 것 설명해줘" / "간판 읽어줘" / "다음" / "그만"
+    </p>
+    <p id="modelStatus" class="hint"></p>
+    <button class="secondary" id="browseBackBtn">그만 (뒤로가기)</button>
+  </section>
+
+<script src="/offline.js"></script>
+</body>
+</html>

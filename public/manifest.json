@@ -1,0 +1,18 @@
+{
+  "name": "EarShopping — 음성 쇼핑·매장 안내",
+  "short_name": "EarShopping",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#070b14",
+  "theme_color": "#0ea5e9",
+  "orientation": "portrait",
+  "description": "시각장애인을 위한 음성 기반 온라인 쇼핑 및 오프라인 백화점 매장 안내 서비스",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

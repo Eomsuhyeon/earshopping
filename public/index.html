@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="/manifest.json">
+<link rel="stylesheet" href="/theme.css">
+<meta name="theme-color" content="#0ea5e9">
+<title>EarShopping — 온라인 / 오프라인 선택</title>
+<style>
+  body{ margin:0; min-height:100vh; display:flex; flex-direction:column; align-items:center;
+    justify-content:center; padding: 24px; text-align:center; }
+  .logo-row{ display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:8px; }
+  .logo-mark{
+    width:52px; height:52px; border-radius:16px; background: var(--gradient);
+    display:flex; align-items:center; justify-content:center; font-size:24px;
+    box-shadow: var(--shadow-glow);
+  }
+  h1{ font-size:30px; }
+  p.hint{ color: var(--text-muted); font-size:13.5px; max-width:440px; margin: 10px 0 32px; line-height:1.7; }
+  .choices{ display:flex; gap:16px; flex-wrap:wrap; justify-content:center; margin-bottom: 28px; }
+  .choice{
+    width: 210px; padding: 32px 20px; text-align:center; cursor:pointer;
+    color:#eee; font-size:18px; font-weight:800; font-family: var(--font-display);
+  }
+  .choice .emoji{ font-size:32px; display:block; margin-bottom:10px; }
+  .choice .sub{ display:block; font-size:12px; color: var(--text-dim); font-weight:400;
+    margin-top:8px; font-family: var(--font-body); line-height:1.5; }
+  #statusBar{ margin-top:22px; min-height:18px; }
+</style>
+</head>
+<body>
+  <div class="logo-row">
+    <div class="logo-mark" aria-hidden="true">👂</div>
+  </div>
+  <h1 class="brand-title">EarShopping<span class="brand-badge">♿ 접근성 우선</span></h1>
+  <p class="hint">온라인 쇼핑을 하시려면 "온라인", 백화점에서 매장을 찾으시려면 "오프라인"이라고 말씀하시거나 아래에서 선택해주세요.</p>
+
+  <div class="choices">
+    <div class="card choice" id="btnOnline"><span class="emoji" aria-hidden="true">🛍️</span>온라인<span class="sub">음성으로 옷 검색·구매 안내</span></div>
+    <div class="card choice" id="btnOffline"><span class="emoji" aria-hidden="true">🏬</span>오프라인<span class="sub">백화점 매장 음성 내비게이션</span></div>
+  </div>
+
+  <button class="mic" id="micBtn">🎤 말하기 (Space 키도 가능)</button>
+  <p id="statusBar" class="status-text" role="status" aria-live="polite">"온라인" 또는 "오프라인"이라고 말씀해주세요.</p>
+
+<script src="/landing.js"></script>
+</body>
+</html>

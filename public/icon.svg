@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <rect width="200" height="200" rx="36" fill="#070b14"/>
+  <!-- 귀 윤곽 -->
+  <path d="M78 130c-22-8-34-30-30-54 4-26 28-44 54-40 24 4 40 26 38 50-1 14-9 24-20 30-8 4-12 10-12 18v8c0 10-8 18-18 18s-18-8-18-18v-12z"
+        fill="none" stroke="#38bdf8" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- 귓속 나선 -->
+  <path d="M92 108c10 4 22-2 24-14 2-10-6-18-14-16-6 2-9 8-6 13" fill="none" stroke="#2dd4bf" stroke-width="7" stroke-linecap="round"/>
+  <!-- 사운드웨이브 -->
+  <path d="M150 76v20" stroke="#5eead4" stroke-width="7" stroke-linecap="round"/>
+  <path d="M163 66v40" stroke="#5eead4" stroke-width="7" stroke-linecap="round"/>
+  <path d="M176 82v10" stroke="#5eead4" stroke-width="7" stroke-linecap="round"/>
+</svg>
