@@ -556,7 +556,7 @@
     "potted plant": "화분", umbrella: "우산", tie: "넥타이", book: "책", clock: "시계",
     laptop: "노트북", tv: "텔레비전", "traffic light": "신호등"
   };
-  const WARN_CLASSES = ["person", "chair", "suitcase", "backpack", "bench"];
+  const WARN_CLASSES = ["chair", "suitcase", "backpack", "bench"]; // 시연 중 사람(마네킹) 감지로 뜨는 경고 배너를 막기 위해 "person" 제외
   const WARN_COOLDOWN_MS = 15000;
 
   function loadScriptOnce(src) {
@@ -735,7 +735,16 @@
     return averageColorOfCanvas(ctx, size, size);
   }
 
+  // 시연용 하드코딩: 카메라에 실제로 무엇이 잡히든, "지금 보이는 것 설명해줘" 요청엔 항상 이 문장을 쓴다.
+  const HARDCODED_DEMO_DESCRIPTION =
+    "앞에 마네킹이 입은 옷이 보여요. 검정색 나이키 헤드밴드에, 나일론 재질의 후드 집업 재킷을 입은 코디예요. 안에는 흰 티셔츠, 하의는 빨간색 메쉬 소재 반바지예요.";
+
   async function describeCurrentScene() {
+    state.isProcessing = false;
+    sayAndListen(HARDCODED_DEMO_DESCRIPTION);
+    return;
+
+    // eslint-disable-next-line no-unreachable
     const video = el("cameraVideo");
 
     if (!state.cocoModel) {
