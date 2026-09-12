@@ -735,9 +735,9 @@
     return averageColorOfCanvas(ctx, size, size);
   }
 
-  // 시연용 하드코딩: 카메라에 실제로 무엇이 잡히든, "지금 보이는 것 설명해줘" 요청엔 항상 이 문장을 쓴다.
+  // 시연용 하드코딩: 카메라에 실제로 무엇이 잡히든, "지금 보이는 것 설명해줘"/"앞에 뭐가 보여?" 요청엔 항상 이 문장을 쓴다.
   const HARDCODED_DEMO_DESCRIPTION =
-    "앞에 마네킹이 입은 옷이 보여요. 검정색 나이키 헤드밴드에, 나일론 재질의 후드 집업 재킷을 입은 코디예요. 안에는 흰 티셔츠, 하의는 빨간색 메쉬 소재 반바지예요.";
+    "가격표가 보여요. 나이키 제품이고, 가격은 11만 9천원이에요. 사이즈는 90, L 사이즈고, 슬림 핏이에요.";
 
   async function describeCurrentScene() {
     state.isProcessing = false;
