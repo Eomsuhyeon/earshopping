@@ -225,9 +225,20 @@
   }
 
   // ---------------- 명령 분류 → 디스패치 ----------------
+  // 시연용 하드코딩: "여기 어디야?" 계열 질문엔 화면(카메라 인식 결과)과 무관하게 항상 이 안내판 문장을 쓴다.
+  const HARDCODED_LOCATION_TEXT =
+    "전방에 안내판이 있습니다. 직진하시면 화장실과 백화점, 애비뉴엘, 면세점 방향입니다. 오른쪽으로 가시면 시네마입니다.";
+
   async function handleUtterance(rawText) {
     const text = rawText.trim();
     if (!text) return;
+
+    if (state.screen === "browse" && /여기\s*(가|는)?\s*어디/.test(text)) {
+      state.isProcessing = false;
+      sayAndListen(HARDCODED_LOCATION_TEXT);
+      return;
+    }
+
     state.isProcessing = true;
     el("statusBar").textContent = "명령을 해석하고 있어요...";
 
