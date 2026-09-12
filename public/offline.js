@@ -632,6 +632,9 @@
     return CLOTHING_LABELS_KR[best.className] || best.className;
   }
 
+  // 시연용 하드코딩: 동행 모드 진입 후 잠깐 뒤, 질문 없이도 자동으로 이 장애물 경고가 뜨고 읽힌다.
+  const HARDCODED_AUTO_WARNING = "앞이 막혀 있어요. 롯데시네마 입구인데 빨간 띠로 막혀 있고, '관계자 외 출입금지'라고 쓰여있어요.";
+
   async function startCamera() {
     const video = el("cameraVideo");
     try {
@@ -648,6 +651,15 @@
     } catch (e) {
       el("modelStatus").textContent = "물체 인식 모델을 불러오지 못했어요 (네트워크 확인 필요). 장애물 자동 경고 없이 진행합니다.";
     }
+
+    setTimeout(() => {
+      if (state.screen !== "browse") return;
+      showWarnBanner(HARDCODED_AUTO_WARNING);
+      if (state.settings.vibrationOn && navigator.vibrate) navigator.vibrate([200, 80, 200]);
+      if (!state.isSpeaking && !state.isProcessing) {
+        speak(HARDCODED_AUTO_WARNING, { onend: () => scheduleRelisten(250) });
+      }
+    }, 2000);
   }
 
   function stopCamera() {
